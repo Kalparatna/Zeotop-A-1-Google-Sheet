@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 // Get the backend URL from environment variables
-const backendUrl = process.env.VITE_BACKEND_URL || "https://your-backend.vercel.app";
+const backendUrl = process.env.VITE_BACKEND_URL || "https://zeotop-a-1-google-sheet-backend.vercel.app/";
 
 export default defineConfig({
   plugins: [react()],
