@@ -2,7 +2,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-// https://vitejs.dev/config/
+// Get the backend URL from environment variables
+const backendUrl = process.env.VITE_BACKEND_URL || "https://your-backend.vercel.app";
+
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -10,6 +12,18 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src/"),
     },
   },
-  base: process.env.NODE_ENV === "production" ? "/google-sheets" : "/",
-  server: { port: 3000 },
+  base: "./", // Ensures correct asset loading
+  build: {
+    outDir: "dist",
+  },
+  server: {
+    port: 3000,
+    proxy: {
+      "/api": {
+        target: backendUrl,
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });
