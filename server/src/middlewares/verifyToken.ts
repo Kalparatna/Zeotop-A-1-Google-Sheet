@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { verify } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { asyncHandler } from "../utils";
 
 type User = {
@@ -11,18 +11,25 @@ type User = {
 declare global {
   namespace Express {
     interface Request {
-      user: User;
+      user?: User;
     }
   }
 }
 
 const verifyToken = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    let token = req?.headers?.authorization?.split(`"`)[1];
-    if (!token) return res.status(401).send({ message: "Unauthorized" });
-    let decoded = await verify(token, process.env.JWT_SECRET as string);
-    req.user = decoded as User;
-    next();
+    try {
+      let token = req.headers.authorization?.split(" ")[1]; // ✅ Correct token extraction
+
+      if (!token) return res.status(401).json({ message: "Unauthorized: No token provided" });
+
+      let decoded = jwt.verify(token, process.env.JWT_SECRET as string); // ✅ Proper token verification
+      req.user = decoded as User;
+
+      next();
+    } catch (error) {
+      return res.status(401).json({ message: "Unauthorized: Invalid or expired token" });
+    }
   }
 );
 
