@@ -2,25 +2,26 @@ import { Request, Response, NextFunction } from "express";
 
 type CORS = (req: Request, res: Response, next: NextFunction) => void;
 
-let regex =
-  /^(?:https?:\/\/(?:vkaswin\.github\.io|localhost:\d+|vercel\.com))$/;
+const allowedOrigins = [
+  "https://zeotop-a-1-google-sheet.vercel.app",
+  "http://localhost:3000",
+];
 
-let allowedHeaders = ["Authorization", "Content-Type"];
+const allowedHeaders = ["Authorization", "Content-Type"];
 
 const cors: CORS = (req, res, next) => {
   let origin = req.headers.origin;
-  let method = req.method;
 
-  if (origin && regex.test(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "*");
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin); // ✅ Use exact origin
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", allowedHeaders.join(", "));
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
-    return method == "OPTIONS" ? res.status(200).end() : next();
+    if (req.method === "OPTIONS") return res.status(200).end();
   }
 
-  return !origin ? next() : res.status(403).end();
+  next();
 };
 
 export default cors;
