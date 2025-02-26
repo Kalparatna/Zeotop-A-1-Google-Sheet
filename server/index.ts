@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import cors from "cors"; // Use the correct CORS import
+import cors from "cors";
 import connect from "./src/database/config.js";
 import router from "./src/routes";
 
@@ -9,9 +9,20 @@ dotenv.config();
 const port = process.env.PORT || 5000;
 const app = express();
 
-// CORS configuration
+// ✅ Dynamic CORS Configuration
+const allowedOrigins = [
+  "https://zeotop-a-1-google-sheet.vercel.app",
+  "https://zeotop-a-1-google-sheet-backend.vercel.app/", // Add backend URL too
+];
+
 const corsOptions = {
-  origin: ["https://zeotop-a-1-google-sheet.vercel.app"], // Replace with your actual frontend URL
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: "GET,POST,PUT,DELETE",
   credentials: true,
 };
