@@ -11,7 +11,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: ["https://zeotop-a-1-google-sheet.vercel.app", "*"], // Replace with your actual frontend URL
+  origin: ["https://zeotop-a-1-google-sheet.vercel.app"], // Replace with your actual frontend URL
   methods: "GET,POST,PUT,DELETE",
   credentials: true,
 };
