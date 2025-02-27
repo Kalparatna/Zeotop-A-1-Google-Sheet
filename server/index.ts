@@ -12,7 +12,6 @@ const app = express();
 // ✅ Dynamic CORS Configuration
 const allowedOrigins = [
   "https://zeotop-a-1-google-sheet.vercel.app",
-  "https://zeotop-a-1-google-sheet-backend.vercel.app/", // Add backend URL too
 ];
 
 const corsOptions = {
